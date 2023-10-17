@@ -12,6 +12,7 @@ pub struct Inputs<'a> {
 }
 
 pub async fn run(event_loop: EventLoop<()>, window: Window, inputs: Inputs<'_>, num_vertices: u32) {
+	//2.2.1 Backend
     let size = window.inner_size();
     let instance = wgpu::Instance::new(wgpu::Backends::VULKAN);
     let surface = unsafe { instance.create_surface(&window) };
@@ -34,16 +35,17 @@ pub async fn run(event_loop: EventLoop<()>, window: Window, inputs: Inputs<'_>, 
         )
         .await
         .expect("Failed to create device");
+	//2.2.2 Surface
     let format = surface.get_preferred_format(&adapter).unwrap();
     let mut config = wgpu::SurfaceConfiguration {
         usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
         format: format,
-        width: size.width,
-        height: size.height,
+        width: size.width,//need to make sure it's never 0 => crash
+        height: size.height,//same
         present_mode: wgpu::PresentMode::Mailbox,
     };
     surface.configure(&device, &config);
-    // Load the shaders from disk
+    // 2.2.3 Load Shaders
     let shader = device.create_shader_module(&wgpu::ShaderModuleDescriptor {
         label: None,
         source: inputs.source,

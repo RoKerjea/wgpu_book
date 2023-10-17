@@ -10,7 +10,7 @@ fn main() {
     env_logger::init();
 
     let inputs = common::Inputs {
-        source: wgpu::ShaderSource::Wgsl(Cow::Borrowed(include_str!("first_triangle.wgsl"))),
+        source: wgpu::ShaderSource::Wgsl(Cow::Borrowed(include_str!("first_triangle.wgsl"))),//cow: clone on write
         topology: wgpu::PrimitiveTopology::TriangleList,
         strip_index_format: None,
     };
