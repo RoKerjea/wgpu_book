@@ -50,6 +50,7 @@ pub async fn run(event_loop: EventLoop<()>, window: Window, inputs: Inputs<'_>, 
         label: None,
         source: inputs.source,
     });
+	//2.2.4 render pipeline
     let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
         label: None,
         bind_group_layouts: &[],
@@ -90,6 +91,7 @@ pub async fn run(event_loop: EventLoop<()>, window: Window, inputs: Inputs<'_>, 
                 surface.configure(&device, &config);
             }
             Event::RedrawRequested(_) => {
+				//2.2.5 Rendering output
                 let frame = surface.get_current_texture().unwrap();
                 let view = frame
                     .texture
