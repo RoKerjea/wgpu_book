@@ -68,7 +68,7 @@ impl State {
             .device
             .create_shader_module(&wgpu::ShaderModuleDescriptor {
                 label: Some("Shader"),
-                source: wgpu::ShaderSource::Wgsl(include_str!("line3d.wgsl").into()),
+                source: wgpu::ShaderSource::Wgsl(include_str!("cube_face_color.wgsl").into()),
             });
         // uniform data
         let camera_position = (3.0, 1.5, 3.0).into();
