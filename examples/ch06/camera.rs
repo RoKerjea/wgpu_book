@@ -1,5 +1,6 @@
 use cgmath::*;
 use std::f32::consts::PI;
+use winit::event::*;
 
 pub struct Camera {
     pub position: Point3<f32>,
@@ -37,6 +38,7 @@ pub struct CameraController {
 	rotatex: f32,
 	rotatey: f32,
 	speed: f32,
+    position: Point3<f32>,
 }
 
 impl CameraController {
@@ -45,6 +47,7 @@ impl CameraController {
 			rotatex: 0.0,
 			rotatey: 0.0,
 			speed,
+			position: Point3::new(0.0, 0.0, 0.0),
 		}
 	}
 
@@ -53,7 +56,47 @@ impl CameraController {
 		self.rotatey = mousey as f32;
 	}
 
+	pub fn keyboard_move(&mut self, key: VirtualKeyCode, state: ElementState) -> bool{
+        let amount = if state == ElementState::Pressed { 1.0 } else { 0.0 };
+        match key {
+            VirtualKeyCode::W | VirtualKeyCode::Up => {
+                self.position.z = amount;
+                true
+            }
+            VirtualKeyCode::S | VirtualKeyCode::Down => {
+                self.position.z = -amount;
+                true
+            }
+            VirtualKeyCode::A | VirtualKeyCode::Left => {
+                self.position.x = -amount;
+                true
+            }
+            VirtualKeyCode::D | VirtualKeyCode::Right => {
+                self.position.x = amount;
+                true
+            }
+            VirtualKeyCode::Space => {
+                self.position.y = amount;
+                true
+            }
+            VirtualKeyCode::LShift => {
+                self.position.y = -amount;
+                true
+            }
+            _ => false,
+        }
+    }
+
 	pub fn update_camera(&mut self, camera: &mut Camera) {
+
+		let (yaw_sin, yaw_cos) = camera.yaw.0.sin_cos();
+        let forward = Vector3::new(yaw_cos, 0.0, yaw_sin).normalize();
+        let right = Vector3::new(-yaw_sin, 0.0, yaw_cos).normalize();
+        camera.position += forward * (self.position.z)* self.speed;
+        camera.position += right * (self.position.x) * self.speed;
+
+        camera.position.y += (self.position.y) * self.speed;
+
 		camera.yaw += Rad(self.rotatex * self.speed);
 		camera.pitch += Rad(self.rotatey * self.speed);
 

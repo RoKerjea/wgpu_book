@@ -217,6 +217,11 @@ impl State {
 
     fn input(&mut self, event: &DeviceEvent) -> bool {
         match event {
+			DeviceEvent::Key(KeyboardInput {
+				virtual_keycode: Some(key),
+				state,
+				..
+			}) => self.camera_controller.keyboard_move(*key, *state),
             DeviceEvent::Button {
                 button: 1, //left mouse button
                 state,
